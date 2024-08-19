@@ -1,0 +1,13 @@
+<div *ngFor="let problem of problems">
+  <app-problem [data]="problem"></app-problem>
+</div>
+<div class="d-flex justify-content-center align-items-center">
+  <button
+    type="button"
+    class="btn btn-lg btn-primary btn-sm"
+    style="margin: 10px"
+    (click)="goToNewProblem()"
+  >
+    Add New Problem
+  </button>
+</div>

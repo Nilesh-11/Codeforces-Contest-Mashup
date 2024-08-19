@@ -1,0 +1,63 @@
+<div class="container mt-4">
+  <form>
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="problemName">Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="problemName"
+            placeholder="enter problem name"
+          />
+          <br />
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <label for="problemName">Contest ID</label>
+          <input
+            type="number"
+            class="form-control"
+            id="contestId"
+            placeholder="enter contest ID"
+          />
+          <br />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+
+      <div class="col">
+        <div class="form-group">
+  
+          <mat-form-field class="tags-chip-list">
+            <mat-label>Tags</mat-label>
+            <mat-chip-grid #tagGrid aria-label="Enter tag">
+              <mat-chip-row
+                *ngFor="let tag of selectedTags; track: tags"
+                (removed)="removeTag(tag)"
+                [editable]="true"
+                (edited)="editTag(tag, $event)"
+                [aria-description]="'press enter to edit' + tag"
+              >
+                {{ tag }}
+                <button matChipRemove [attr.aria-label]="'remove' + tag">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+              <input
+                placeholder="Add tag..."
+                [matChipInputFor]="tagGrid"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (matChipInputTokenEnd)="addTag($event)"
+              />
+            </mat-chip-grid>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- <h3>this works!</h3> -->
