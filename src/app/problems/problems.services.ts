@@ -15,6 +15,7 @@ export class ProblemServices {
   private problems: Problem[] = [
     {
       contestId: 1,
+      index: "A",
       name: 'Title here',
       tags: ['tag1', 'tag2'],
       rating: 100,
@@ -28,6 +29,7 @@ Pete and Billy are great fans of even numbers, that's why they want to divide th
     },
     {
       contestId: 1,
+      index: "B",
       name: 'Title here',
       tags: ['tag1', 'tag2'],
       rating: 100,
@@ -47,6 +49,7 @@ Pete and Billy are great fans of even numbers, that's why they want to divide th
       map((response: any) => {
         // Transform the response if needed to match the Problem interface
         const problem: Problem = {
+          index: response.problemIdx,
           contestId: response.contestId,
           name: response.name,
           tags: response.tags,
@@ -62,7 +65,6 @@ Pete and Billy are great fans of even numbers, that's why they want to divide th
         this.addProblem(problem);
       })
     );
-    // console.log("ProblemService: ", problem);
   }
 
   getProblems(): Problem[] {
@@ -75,5 +77,29 @@ Pete and Billy are great fans of even numbers, that's why they want to divide th
 
   deleteProblem(name: string): void {
     this.problems = this.problems.filter((problem) => problem.name !== name);
+  }
+
+  randomProblem(details: any){
+    return this.apiServices.getRandomProblem(details)
+    .pipe(
+      map((response: any) => {
+        // Transform the response if needed to match the Problem interface
+        const problem: Problem = {
+          index: response.problemIdx,
+          contestId: response.contestId,
+          name: response.name,
+          tags: response.tags,
+          rating: response.rating,
+          statement: response.statement,
+          time_lim: response.time_lim,
+          mem_lim: response.mem_lim,
+          input: response.input,
+          output: response.output,
+          link: response.link,
+        };
+        this.addProblem(problem);
+        console.log(problem);
+      })
+    )
   }
 }

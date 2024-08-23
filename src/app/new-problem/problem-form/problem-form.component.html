@@ -1,36 +1,64 @@
 <div class="container mt-4">
-  <form>
+  <form [formGroup]="formDetails" class="ml-3">
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <label for="problemName">Name</label>
+          <label for="name">Name</label>
           <input
             type="text"
             class="form-control"
-            id="problemName"
+            id="name"
             placeholder="enter problem name"
-          />
-          <br />
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group">
-          <label for="problemName">Contest ID</label>
-          <input
-            type="number"
-            class="form-control"
-            id="contestId"
-            placeholder="enter contest ID"
+            formControlName="name"
           />
           <br />
         </div>
       </div>
     </div>
     <div class="row">
-
       <div class="col">
         <div class="form-group">
-  
+          <label for="contestId">Contest ID</label>
+          <input
+            type="number"
+            class="form-control"
+            id="contestId"
+            placeholder="enter contest ID"
+            formControlName="contestId"
+          />
+          <br />
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <label for="index">Problem Index</label>
+          <input
+            type="text"
+            class="form-control"
+            id="index"
+            placeholder="enter problem index"
+            formControlName="index"
+          />
+          <br />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="rating">Rating </label>
+          <input
+            type="number"
+            class="form-control"
+            id="rating"
+            placeholder="enter problem rating"
+            formControlName="rating"
+          />
+          <br />
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
           <mat-form-field class="tags-chip-list">
             <mat-label>Tags</mat-label>
             <mat-chip-grid #tagGrid aria-label="Enter tag">
@@ -57,6 +85,13 @@
         </div>
       </div>
     </div>
+    <button
+      type="submit"
+      class="btn btn-primary mt-3 btn-sm"
+      (click)="onSubmitLink()"
+    >
+      Submit
+    </button>
   </form>
 </div>
 

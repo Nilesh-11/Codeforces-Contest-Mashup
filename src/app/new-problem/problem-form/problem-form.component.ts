@@ -9,24 +9,18 @@ import {
 
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
-
+import { Router } from '@angular/router';
+import { ProblemServices } from '../../problems/problems.services';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { FormControl } from '@angular/forms';
-import {
-  MatAutocompleteModule,
-  MatAutocompleteSelectedEvent,
-} from '@angular/material/autocomplete';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import {
   MatChipEditedEvent,
   MatChipInputEvent,
   MatChipsModule,
 } from '@angular/material/chips';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { MatIconModule } from '@angular/material/icon';
 import { Problem } from '../../app.model';
 import { APIServices } from '../../app.services';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -47,9 +41,61 @@ import { CommonModule } from '@angular/common';
 })
 export class ProblemFormComponent {
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  formDetails: FormGroup;
   allTags: string[] = [];
   selectedTags: string[] = [];
-  constructor(private APIservice: APIServices) {}
+
+  constructor(
+    private APIservice: APIServices,
+    private fb: FormBuilder,
+    private router: Router,
+    private problemServices: ProblemServices
+  ) {
+    this.formDetails = this.fb.group({
+      name: [''],
+      contestId: [],
+      index: [],
+      rating: [],
+      tags: [['']],
+    });
+  }
+
+  onSubmitLink() {
+    if (this.formDetails.valid) {
+      let details: Problem = {
+        "contestId": 0,
+        "index": '',
+        "name": '',
+        "tags": [],
+        "rating": 0,
+        "statement": '',
+        "time_lim": 0,
+        "mem_lim": 0,
+        "input": '',
+        "output": '',
+        "link": ''
+      };
+      details['tags'] = this.selectedTags;
+      details['name'] = this.formDetails.get('name')?.value;
+      details['contestId'] = this.formDetails.get('contestId')?.value;
+      details['index'] = this.formDetails.get('index')?.value;
+      details['rating'] = this.formDetails.get('rating')?.value;
+      
+      console.log('correct', details);
+      this.problemServices.randomProblem(details).subscribe({
+        next: () => {
+          console.log("Problem added successfully");
+          this.router.navigate(['/problems']);
+        },
+        error: (err:any) => {
+          console.error("Error adding problem:", err['error']['error']);
+          alert(err['error']['error']);
+        }
+      });
+    } else {
+      console.error('error in form:', this.formDetails.errors);
+    }
+  }
 
   ngOnInit(): void {
     this.APIservice.getTags().subscribe(
@@ -74,8 +120,7 @@ export class ProblemFormComponent {
 
     if (!value) {
       this.removeTag(tag);
-    }
-    else{
+    } else {
       if (this.allTags.includes(value)) {
         if (!this.selectedTags.includes(value)) {
           this.selectedTags.push(value);

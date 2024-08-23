@@ -1,5 +1,6 @@
 export interface Problem{
     contestId: number,
+    index: string,
     name: string,
     tags: string[],
     rating: number,

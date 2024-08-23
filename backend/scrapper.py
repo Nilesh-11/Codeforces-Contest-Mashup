@@ -5,7 +5,7 @@ from typing import List, Optional
 from bs4 import BeautifulSoup
 import requests
 from problems import *
-import random
+import random, json
 
 app = Flask(__name__)
 CORS(app)
@@ -13,11 +13,12 @@ CORS(app)
 @dataclass
 class Problem:
     contestId: Optional[int]
+    index: Optional[str]
     name: Optional[str]
     tags: List[str]
     rating: Optional[int]
     statement: Optional[str]
-    time_lim: Optional[int]
+    time_lim: Optional[float]
     mem_lim: Optional[int]
     input: Optional[str]
     output: Optional[str]
@@ -37,17 +38,15 @@ def get_data_from_url():
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
         
-        # Extract the <div class="problem-statement"> as raw HTML
         problem_statement_div = soup.find('div', class_='problem-statement')
         if problem_statement_div:
-            rawHtml = '<div class="problem-statement">' + problem_statement_div.decode_contents() + '<div>'
-            # Return the raw HTML content of the problem statement div
+            rawHtml = '<div class="problem-statement">' + problem_statement_div.decode_contents() + '</div>'
             data = extract_problem_info(rawHtml)
             dataInfo = fetch_problem_info(url)
             if 'rating' in dataInfo['problem']:
                 data['rating'] = dataInfo['problem']['rating']
-            data['input'] = data['input'][5:]
-            data['output'] = data['output'][6:]
+            data['input'] = data['input'][3:]
+            data['output'] = data['output'][3:]
             data['contestId'] = dataInfo['problem']['contestId']
             data['name'] = dataInfo['problem']['name']
             data['tags'] = dataInfo['problem']['tags']
@@ -56,7 +55,7 @@ def get_data_from_url():
         else:
             return jsonify({'error': 'Problem statement not found'}), 404
     else:
-        return jsonify({'error': 'Failed to fetch problems from Codeforces'}), response.status_code
+        return jsonify({'error': 'Failed to fetch problems from Codeforces'}), response.status_code   
 
 @app.route('/tags', methods=['GET'])
 def fetch_problem_tags():
@@ -83,43 +82,43 @@ def fetch_all_problems() -> dict:
         return response.json()
     return {"error": "Failed to fetch problems"}, response.status_code
 
-@app.route('/random', methods=['GET'])
-def getRandomProblem():
-    # Create a sample Problem instance with default values
-    badProblem = {
-        "contestId":0,
-        "name":None,
-        "tags":[],
-        "rating":0,
-        "statement":None,
-        "time_lim":0,
-        "mem_lim":0,
-        "input":None,
-        "output":None,
-        "link":None
-    }
-    
-    initProblem = badProblem.copy()
-    
-    # Update problem_dict with request arguments
-    for key in request.args.keys():
-        initProblem[key] = request.args.get(key)
+@app.route('/random', methods=['POST'])
+def randomProblem():
+    badproblem = {
+        "contestId": None,
+        "index": None,
+        "name": '',
+        "tags": [],
+        "rating": None,
+        "statement": '',
+        "time_lim": 0,
+        "mem_lim": 0,
+        "input": '',
+        "output": '',
+        "link": ''
+      }
+    initProblem = request.get_json(request.data)
 
     all_problems_response = fetch_all_problems()
     if 'error' in all_problems_response:
         return jsonify({'error': all_problems_response['error']}), 500
-    
+
     problems = all_problems_response.get('result', {}).get('problems', [])
     
     filtered_problems = []
     for problem in problems:
         match = True
         for key in initProblem.keys():
-            if initProblem[key] != badProblem[key]:
-                if key in problem and str(problem[key]) == str(initProblem[key]):
-                    pass
-                else:
-                    match = False
+            if initProblem[key] == badproblem[key]:
+                continue
+            if key == 'tags' and key in problem:
+                for tag in initProblem[key]:
+                    if tag not in problem[key]:
+                        match = False
+            elif key in problem and str(problem[key]) == str(initProblem[key]):
+                pass
+            else:
+                match = False
         if match:
             filtered_problems.append(problem)
     
@@ -127,7 +126,7 @@ def getRandomProblem():
         return jsonify({'error': 'No problems found matching criteria'}), 404
     
     selected_problem = random.choice(filtered_problems)
-    
+    # return "ok"
     contest_id = selected_problem['contestId']
     problem_index = selected_problem['index']
     
@@ -139,7 +138,9 @@ def getRandomProblem():
     }
     
     finalProblem = requests.get(f"http://127.0.0.1:{port}/url?problemLink=" + problemUrl, headers=headers)
-    return finalProblem.text
+    print(finalProblem.text)
+    finalProblem = json.loads(finalProblem.text)
+    return finalProblem
 
 port = 5000
 if __name__ == '__main__':

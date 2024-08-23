@@ -18,4 +18,12 @@ export class APIServices {
     const apiUrl = `http://localhost:5000/url?problemLink=${encodeURIComponent(link)}`;
     return this.http.get<any>(apiUrl);
   }
+
+  getRandomProblem(data: any){
+    const apiUrl = `http://localhost:5000/random`;
+    const headers = {
+      'Content-Type': 'application/json'
+    }
+    return this.http.post<any>(apiUrl, data, {headers});
+  }
 }
