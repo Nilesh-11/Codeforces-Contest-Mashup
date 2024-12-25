@@ -1,0 +1,32 @@
+.card {
+  margin: 10px;
+}
+
+.card-title {
+  margin: 0;
+}
+
+/* Remove default padding and margin from the expansion panel header */
+.custom-header {
+  margin: 8px 16px; /* Adjust the margin for the header */
+}
+
+.custom-card-header {
+  padding: 8px 16px; /* Adjust the padding inside the card */
+}
+
+.card-title {
+  margin-bottom: 8px; /* Add some margin below the title */
+}
+
+/* Ensure the card header takes up the full width */
+.full-width {
+  width: 100%;
+  padding: 10px; /* Adjust padding as needed */
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
+}
+
+/* Optional: Add additional styles to make it look nice */
+.custom-header .card-header {
+  border-radius: 0; /* Remove any border-radius if needed */
+}

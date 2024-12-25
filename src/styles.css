@@ -1,0 +1,30 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.typography{
+    color-scheme: dark !important;
+    --darkreader-neutral-background: #202223;
+    --darkreader-neutral-text: #e3dfda;
+    --darkreader-selection-background: #0d59b5;
+    --darkreader-selection-text: #f2f0ed;
+    --border-radius: 6px;
+    --notice-color: #888;
+    --border-color: rgb(185, 185, 185);
+    --muted-color: #666;
+    --darkreader-border--border-radius: 6px;
+    --darkreader-text--notice-color: #9d9488;
+    --darkreader-border--border-color: #44494c;
+    --darkreader-text--muted-color: #a8a095;
+    --highlighted-blue-color: #def;
+    --highlighted-green-color: #E8F5E9;
+    padding: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 21px;
+    -webkit-text-size-adjust: 100%;
+    font-size: 1.4rem;
+    word-wrap: break-word;
+    margin: 1.5em 0 0 0 !important;
+    color: rgb(211, 207, 201);
+}

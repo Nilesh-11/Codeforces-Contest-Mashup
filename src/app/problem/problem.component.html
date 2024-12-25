@@ -1,0 +1,43 @@
+<div class="card">
+  <mat-expansion-panel hideToggle>
+    <mat-expansion-panel-header>
+      <div class="card-header full-width">
+        <div class="d-flex justify-content-between">
+          <span class="card-title">{{ data?.name }}</span>
+          <span class="badge bg-secondary">Rating: {{ data?.rating }}</span>
+        </div>
+      </div>
+    </mat-expansion-panel-header>
+    
+    <div class="card-body">
+      <span class="badge bg-info">ID: {{ data?.contestId }}</span>
+      <div class="d-flex justify-content-center">
+        <p class="mb-2"><strong>Time Limit:</strong> {{ data?.time_lim }} ms</p>
+      </div>
+      <div class="d-flex justify-content-center">
+        <p><strong>Memory Limit:</strong> {{ data?.mem_lim }} MB</p>
+      </div>
+      <p><strong>Statement:</strong> <span [innerHTML]="data?.statement"></span></p>
+      <p><strong>Input:</strong> <span [innerHTML]="data?.input"></span></p>
+      <p><strong>Output:</strong> <span [innerHTML]="data?.output"></span></p>
+
+      <!-- Display Tags -->
+      <p><strong>Tags:</strong></p>
+      <div class="mb-3">
+        <span *ngFor="let tag of data?.tags" class="badge bg-secondary me-2">{{
+          tag
+        }}</span>
+      </div>
+
+      <!-- Buttons -->
+      <div class="d-flex">
+        <button class="btn btn-primary me-2" (click)="getRandomProblem()">
+          Get Random Problem
+        </button>
+        <a [href]="data?.link" class="btn btn-outline-primary" target="_blank"
+          >Link</a
+        >
+      </div>
+    </div>
+  </mat-expansion-panel>
+</div>
